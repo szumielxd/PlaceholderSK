@@ -1,0 +1,48 @@
+package me.szumielxd.PlaceholderSK;
+
+import java.io.IOException;
+
+import org.bukkit.plugin.java.JavaPlugin;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptAddon;
+
+public class PlaceholderSK extends JavaPlugin {
+	
+	
+	private static PlaceholderSK instance;
+	private SkriptAddon addon;
+	
+	
+	public void onEnable() {
+		
+		instance = this;
+		try {
+			//this.getLogger().log(Level.INFO, "§§§§§§§################ "+addon);
+			getSkriptInstance();
+			(this.addon = getSkriptInstance()).loadClasses("me.szumielxd.PlaceholderSK.skript", "events", "expressions");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	public static PlaceholderSK getInstance() {
+		
+		if (instance == null) throw new IllegalStateException();
+		return instance;
+		
+	}
+	
+	
+	public SkriptAddon getSkriptInstance() {
+		
+		if(addon == null) addon = Skript.registerAddon(this);
+		//this.getLogger().log(Level.INFO, "########### "+addon);
+		return addon;
+		
+	}
+	
+
+}
