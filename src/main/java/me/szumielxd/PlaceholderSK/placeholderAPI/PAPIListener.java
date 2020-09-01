@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.szumielxd.PlaceholderSK.PlaceholderSK;
+import me.szumielxd.PlaceholderSK.utils.ReflectionUtils;
 
 public class PAPIListener extends PlaceholderExpansion {
 
@@ -45,14 +46,16 @@ public class PAPIListener extends PlaceholderExpansion {
 	
 	@Override
 	public String onPlaceholderRequest(Player p, String param) {
-		Thread.currentThread();
 		PAPIEvent event;
 		if(Bukkit.isPrimaryThread()) {
 			event = new PAPIEvent(p, identifier, param);
 		}else {
 			event = new PAPIEvent(p, identifier, param, true);
 		}
-		Bukkit.getPluginManager().callEvent(event);
+		ReflectionUtils utils = PlaceholderSK.getInstance().getReflectionUtils();
+		Object res = utils.getField(Bukkit.getServer(), "console");
+		boolean running = (boolean) utils.invokeMethod(res, "isRunning");
+		if(running) Bukkit.getPluginManager().callEvent(event);
 		return event.getResult();
 	}
 

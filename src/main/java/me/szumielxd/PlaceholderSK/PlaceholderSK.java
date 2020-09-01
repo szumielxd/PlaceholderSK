@@ -6,17 +6,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
+import me.szumielxd.PlaceholderSK.utils.ReflectionUtils;
 
 public class PlaceholderSK extends JavaPlugin {
 	
 	
 	private static PlaceholderSK instance;
+	private ReflectionUtils reflections;
 	private SkriptAddon addon;
 	
 	
 	public void onEnable() {
 		
 		instance = this;
+		reflections = new ReflectionUtils();
 		try {
 			//this.getLogger().log(Level.INFO, "§§§§§§§################ "+addon);
 			getSkriptInstance();
@@ -42,6 +45,11 @@ public class PlaceholderSK extends JavaPlugin {
 		//this.getLogger().log(Level.INFO, "########### "+addon);
 		return addon;
 		
+	}
+	
+	
+	public ReflectionUtils getReflectionUtils() {
+		return this.reflections;
 	}
 	
 

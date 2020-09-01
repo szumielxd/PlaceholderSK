@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.szumielxd</groupId>
   <artifactId>PlaceholderSK</artifactId>
-  <version>1.2.1</version>
+  <version>1.2.2</version>
   <name>PlaceholderSK</name>
   <description>Skript addon that provides option to creating custom placeholders with PlaceholderAPI</description>
   <properties>

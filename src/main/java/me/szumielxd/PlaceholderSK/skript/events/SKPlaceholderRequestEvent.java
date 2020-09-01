@@ -143,6 +143,7 @@ public class SKPlaceholderRequestEvent extends SelfRegisteringSkriptEvent {
 	
 	
 	private void legacyUnregister(PlaceholderExpansion expansion) {
+		if(!Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) return;
 		try {
 			expansion.getClass().getMethod("unregister").invoke(expansion);
 		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
