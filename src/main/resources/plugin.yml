@@ -1,0 +1,7 @@
+name: ${name}
+version: ${version}
+author: ${author}
+main: ${mainClass}
+description: ${description}
+depend: [Skript, PlaceholderAPI]
+api-version: 1.13
