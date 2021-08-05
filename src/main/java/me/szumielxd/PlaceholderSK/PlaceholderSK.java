@@ -41,7 +41,6 @@ public class PlaceholderSK extends JavaPlugin {
 	public SkriptAddon getSkriptInstance() {
 		
 		if(addon == null) addon = Skript.registerAddon(this);
-		//this.getLogger().log(Level.INFO, "########### "+addon);
 		return addon;
 		
 	}

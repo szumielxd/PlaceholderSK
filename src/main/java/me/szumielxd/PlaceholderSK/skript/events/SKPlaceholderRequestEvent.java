@@ -1,7 +1,6 @@
 package me.szumielxd.PlaceholderSK.skript.events;
 
 import ch.njol.skript.Skript;
-//import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.SkriptEventHandler;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -12,17 +11,14 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.Getter;
-//import ch.njol.skript.util.Task;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-//import me.szumielxd.PlaceholderSK.PlaceholderSK;
 import me.szumielxd.PlaceholderSK.placeholderAPI.PAPIEvent;
 import me.szumielxd.PlaceholderSK.placeholderAPI.PAPIListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
-//import java.util.concurrent.Callable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -83,22 +79,9 @@ public class SKPlaceholderRequestEvent extends SelfRegisteringSkriptEvent {
 			if(ev.getPrefix() != null) {
 				Trigger tr = triggers.get(ev.getPrefix());
 				if(tr != null) {
-					
-					//if(!ev.isAsynchronous()) {
-						SkriptEventHandler.logTriggerStart(tr);
-						tr.execute(e);
-						SkriptEventHandler.logTriggerEnd(tr);
-					/*} else {
-						Task.callSync(new Callable<Void>() {
-							@Override
-							public Void call() throws Exception {
-								SkriptEventHandler.logTriggerStart(tr);
-								tr.execute(e);
-								SkriptEventHandler.logTriggerEnd(tr);
-								return null;
-							}
-						});
-					}*/
+					SkriptEventHandler.logTriggerStart(tr);
+					tr.execute(e);
+					SkriptEventHandler.logTriggerEnd(tr);
 				}
 			}
 			return;
@@ -121,7 +104,6 @@ public class SKPlaceholderRequestEvent extends SelfRegisteringSkriptEvent {
 		listeners.put(prefix, l);
 		l.register();
 		if (!registeredExecutor) {
-			//Bukkit.getPluginManager().registerEvent(PAPIEvent.class, new Listener() {}, SkriptConfig.defaultEventPriority.value(), executor, PlaceholderSK.getInstance(), true);
 			registeredExecutor = true;
 		}
 	}
@@ -158,6 +140,4 @@ public class SKPlaceholderRequestEvent extends SelfRegisteringSkriptEvent {
 			}
 		}
 	}
-	
-
 }
