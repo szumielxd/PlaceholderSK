@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>me.szumielxd</groupId>
-  <artifactId>PlaceholderSK</artifactId>
-  <version>1.3.0</version>
-  <name>PlaceholderSK</name>
-  <description>Skript addon that provides option to creating custom placeholders with PlaceholderAPI</description>
-  <properties>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>me.szumielxd</groupId>
+	<artifactId>PlaceholderSK</artifactId>
+	<version>1.3.0</version>
+	<name>PlaceholderSK</name>
+	<description>Skript addon that provides option to creating custom placeholders with PlaceholderAPI</description>
+	<properties>
 		<author>szumielxd</author>
 		<mainClass>me.szumielxd.PlaceholderSK.PlaceholderSK</mainClass>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
