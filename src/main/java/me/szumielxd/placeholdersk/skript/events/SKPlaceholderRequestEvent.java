@@ -1,4 +1,4 @@
-package me.szumielxd.PlaceholderSK.skript.events;
+package me.szumielxd.placeholdersk.skript.events;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
@@ -13,12 +13,14 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.Getter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.szumielxd.PlaceholderSK.placeholderAPI.PAPIEvent;
-import me.szumielxd.PlaceholderSK.placeholderAPI.PAPIListener;
+import me.szumielxd.placeholdersk.placeholderapi.PAPIEvent;
+import me.szumielxd.placeholdersk.placeholderapi.PAPIListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -27,6 +29,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("On Placeholder Request")
 @Description("Called whenever a placeholder is requested")
@@ -34,7 +38,7 @@ import org.bukkit.plugin.EventExecutor;
 public class SKPlaceholderRequestEvent extends SelfRegisteringSkriptEvent {
 
 	static {
-		Skript.registerEvent("Placeholder Request", SKPlaceholderRequestEvent.class, PAPIEvent.class, "(placeholder[api]|papi) request with [the] prefix %string%");
+		Skript.registerEvent("Placeholder Request", SKPlaceholderRequestEvent.class, PAPIEvent.class, "(placeholder[api]|papi) request with [the] prefix %string% [and placeholders %strings%]");
 		EventValues.registerEventValue(PAPIEvent.class, Player.class, new Getter<Player, PAPIEvent>() {
 			@Override
 			public Player get(PAPIEvent e) {
@@ -52,29 +56,30 @@ public class SKPlaceholderRequestEvent extends SelfRegisteringSkriptEvent {
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(final Literal<?>[] args, final int matchedPattern, final SkriptParser.ParseResult parser) {
-		prefix = ((Literal<String>) args[0]).getSingle();
-		if ("".equals(prefix)) {
-			Skript.error(prefix + " is not a valid placeholder", ErrorQuality.SEMANTIC_ERROR);
+		this.prefix = ((Literal<String>) args[0]).getSingle();
+		if ("".equals(this.prefix)) {
+			Skript.error(this.prefix + " is not a valid placeholder", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
-		if(PlaceholderAPI.isRegistered(prefix)) {
-			Skript.error("Placeholder with prefix '" + prefix + "' is already registered", ErrorQuality.SEMANTIC_ERROR);
+		if(PlaceholderAPI.isRegistered(this.prefix)) {
+			Skript.error("Placeholder with prefix '" + this.prefix + "' is already registered", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
+		this.placeholders = args[1] == null? null : ((Literal<String>) args[1]).getAll();
 		return true;
 	}
 
-	private String prefix;
-	final static HashMap<String, Trigger> triggers = new HashMap<>();
-	final static HashMap<String, PAPIListener> listeners = new HashMap<>();
+	private @Nullable String prefix;
+	private @Nullable String[] placeholders;
+	static final @NotNull HashMap<String, Trigger> triggers = new HashMap<>();
+	static final @NotNull HashMap<String, PAPIListener> listeners = new HashMap<>();
 	
 	private static boolean registeredExecutor = false;
-	private final EventExecutor executor = new EventExecutor() {
+	private final @NotNull EventExecutor executor = new EventExecutor() {
 		
 		@Override
 		public void execute(final Listener l, final Event e) throws EventException {
-			if (e == null)
-				return;
+			if (e == null) return;
 			PAPIEvent ev = (PAPIEvent)e;
 			if(ev.getPrefix() != null) {
 				Trigger tr = triggers.get(ev.getPrefix());
@@ -84,7 +89,6 @@ public class SKPlaceholderRequestEvent extends SelfRegisteringSkriptEvent {
 					SkriptEventHandler.logTriggerEnd(tr);
 				}
 			}
-			return;
 		}
 	};
 	
@@ -94,13 +98,13 @@ public class SKPlaceholderRequestEvent extends SelfRegisteringSkriptEvent {
 
 	@Override
 	public String toString(Event e, boolean debug) {
-		return "placeholder request" + (prefix != null ? (" with prefix \"" + prefix + "\"") : "");
+		return "placeholder request with prefix \"" + prefix + "\"" + (this.placeholders != null ? " and placeholders " + Stream.of(this.placeholders).map(s -> "\"" + s + "\"").collect(Collectors.joining(", ")) : "");
 	}
 
 	@Override
 	public void register(Trigger tr) {
 		triggers.put(prefix, tr);
-		PAPIListener l = new PAPIListener(this, prefix);
+		PAPIListener l = new PAPIListener(this, this.prefix, this.placeholders);
 		listeners.put(prefix, l);
 		l.register();
 		if (!registeredExecutor) {
@@ -140,4 +144,6 @@ public class SKPlaceholderRequestEvent extends SelfRegisteringSkriptEvent {
 			}
 		}
 	}
+	
+
 }

@@ -1,4 +1,4 @@
-package me.szumielxd.PlaceholderSK.utils;
+package me.szumielxd.placeholdersk.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

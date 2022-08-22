@@ -1,4 +1,4 @@
-package me.szumielxd.PlaceholderSK;
+package me.szumielxd.placeholdersk;
 
 import java.io.IOException;
 
@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import me.szumielxd.PlaceholderSK.utils.ReflectionUtils;
+import me.szumielxd.placeholdersk.utils.ReflectionUtils;
 
 public class PlaceholderSK extends JavaPlugin {
 	
@@ -16,13 +16,14 @@ public class PlaceholderSK extends JavaPlugin {
 	private SkriptAddon addon;
 	
 	
+	@Override
 	public void onEnable() {
 		
-		instance = this;
+		setInstance(this);
 		reflections = new ReflectionUtils();
 		try {
-			getSkriptInstance();
-			(this.addon = getSkriptInstance()).loadClasses("me.szumielxd.PlaceholderSK.skript", "events", "expressions");
+			this.addon = getSkriptInstance();
+			this.addon.loadClasses("me.szumielxd.placeholdersk.skript", "events", "expressions");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -31,20 +32,18 @@ public class PlaceholderSK extends JavaPlugin {
 	
 	
 	public static PlaceholderSK getInstance() {
-		
 		if (instance == null) throw new IllegalStateException();
 		return instance;
-		
 	}
 	
+	private static void setInstance(PlaceholderSK instance) {
+		PlaceholderSK.instance = instance;
+	}
 	
-	public SkriptAddon getSkriptInstance() {
-		
+	public SkriptAddon getSkriptInstance() {	
 		if(addon == null) addon = Skript.registerAddon(this);
 		return addon;
-		
 	}
-	
 	
 	public ReflectionUtils getReflectionUtils() {
 		return this.reflections;

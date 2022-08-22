@@ -1,4 +1,4 @@
-package me.szumielxd.PlaceholderSK.skript.expressions;
+package me.szumielxd.placeholdersk.skript.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -12,6 +12,8 @@ import ch.njol.util.Kleenean;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ public class ExprPlaceholder extends SimpleExpression<String> {
         Skript.registerExpression(ExprPlaceholder.class, String.class, ExpressionType.SIMPLE,"[the] ([value of] placeholder[s]|placeholder [value] [of]) %strings% [from %players%]");
     }
 
-    private String formatPlaceholder(String placeholder) {
+    private @Nullable String formatPlaceholder(@Nullable String placeholder) {
         if (placeholder == null) {
             return null;
         }
@@ -41,7 +43,7 @@ public class ExprPlaceholder extends SimpleExpression<String> {
         return "%" + placeholder + "%";
     }
 
-    private String getPlaceholder(String placeholder, Player player) {
+    private @Nullable String getPlaceholder(@NotNull String placeholder, @Nullable Player player) {
         placeholder = formatPlaceholder(placeholder);
         if (PlaceholderAPI.containsPlaceholders(placeholder)) {
             String value = PlaceholderAPI.setPlaceholders(player, placeholder);
@@ -64,17 +66,17 @@ public class ExprPlaceholder extends SimpleExpression<String> {
 
     @Override
     protected String[] get(final Event e) {
-        String[] placeholders = this.placeholders.getArray(e);
-        Player[] players = this.players.getArray(e);
+        String[] placeholdersArray = this.placeholders.getArray(e);
+        Player[] playersArray = this.players.getArray(e);
         List<String> values = new ArrayList<>();
-        if (players.length !=  0) {
-            for (String ph : placeholders) {
-                for (Player p : players) {
+        if (playersArray.length !=  0) {
+            for (String ph : placeholdersArray) {
+                for (Player p : playersArray) {
                     values.add(getPlaceholder(ph, p));
                 }
             }
         } else {
-            for (String ph : placeholders) {
+            for (String ph : placeholdersArray) {
                 values.add(getPlaceholder(ph, null));
             }
         }

@@ -1,4 +1,4 @@
-package me.szumielxd.PlaceholderSK.skript.expressions;
+package me.szumielxd.placeholdersk.skript.expressions;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
@@ -8,9 +8,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import me.szumielxd.PlaceholderSK.placeholderAPI.PAPIEvent;
+import me.szumielxd.placeholdersk.placeholderapi.PAPIEvent;
 
 import org.bukkit.event.Event;
 import ch.njol.skript.lang.util.SimpleExpression;
@@ -26,11 +27,20 @@ public class ExprIdentifier extends SimpleExpression<String> {
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        if (!ScriptLoader.isCurrentEvent(PAPIEvent.class)) {
+        if (!this.isValidEvent()) {
             Skript.error("The PlaceholderAPI identifier can only be used in a placeholder request event", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
         return true;
+    }
+    
+    @SuppressWarnings("deprecation")
+	private boolean isValidEvent() {
+    	try {
+    		return ParserInstance.get().isCurrentEvent(PAPIEvent.class);
+    	} catch (NoSuchMethodError e) {
+    		return ScriptLoader.isCurrentEvent(PAPIEvent.class);
+    	}
     }
 
     @Override
