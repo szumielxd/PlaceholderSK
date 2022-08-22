@@ -3,5 +3,6 @@ version: ${version}
 author: ${author}
 main: ${mainClass}
 description: ${description}
+website: ${url}
 depend: [Skript, PlaceholderAPI]
 api-version: 1.13
