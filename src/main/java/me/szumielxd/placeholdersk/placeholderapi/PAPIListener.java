@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import ch.njol.skript.lang.Trigger;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.clip.placeholderapi.expansion.Relational;
 import me.szumielxd.placeholdersk.PlaceholderSK;
@@ -19,16 +20,18 @@ import me.szumielxd.placeholdersk.skript.events.SKPlaceholderRequestEvent;
 public class PAPIListener extends PlaceholderExpansion implements Relational {
 
 
+	private final SKPlaceholderRequestEvent skEvent;
 	private final String identifier;
 	private final List<String> placeholders;
-	private final SKPlaceholderRequestEvent skEvent;
+	private final String trigger;
 	private final Listener listener = new Listener() {};
 	
 	
-	public PAPIListener(@NotNull SKPlaceholderRequestEvent skEvent, @NotNull String prefix, @Nullable String[] placeholders) {
+	public PAPIListener(@NotNull SKPlaceholderRequestEvent skEvent, @NotNull String prefix, @Nullable String[] placeholders, Trigger trigger) {
 		this.skEvent = skEvent;
 		this.identifier = prefix;
 		this.placeholders = placeholders == null ? Collections.emptyList() : Stream.of(placeholders).map(s -> "%" + prefix + "_" + s + "%").collect(Collectors.toList());
+		this.trigger = trigger.getDebugLabel();
 	}
 	
 	
@@ -71,14 +74,13 @@ public class PAPIListener extends PlaceholderExpansion implements Relational {
 	}
 	
 	@Override
+	public String getName() {
+		return "%s (%s)".formatted(getIdentifier(), this.trigger);
+	}
+	
+	@Override
 	public String onPlaceholderRequest(Player player, String param) {
-		PAPIEvent event = new PAPIEvent(player, null, this.identifier, param);
-		try {
-			this.skEvent.getExecutor().execute(this.listener, event);
-		} catch (EventException e) {
-			e.printStackTrace();
-		}
-		return event.getResult();
+		return onPlaceholderRequest(null, player, param);
 	}
 
 

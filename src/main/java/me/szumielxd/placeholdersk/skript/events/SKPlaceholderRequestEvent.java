@@ -104,7 +104,8 @@ public class SKPlaceholderRequestEvent extends SelfRegisteringSkriptEvent {
 	@Override
 	public void register(Trigger tr) {
 		triggers.put(prefix, tr);
-		PAPIListener l = new PAPIListener(this, this.prefix, this.placeholders);
+		
+		PAPIListener l = new PAPIListener(this, this.prefix, this.placeholders, tr);
 		listeners.put(prefix, l);
 		l.register();
 		if (!registeredExecutor) {
